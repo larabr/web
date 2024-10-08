@@ -118,6 +118,8 @@ class TestRunnerApiPlugin implements TestRunnerPlugin {
           webSocket.on('close', async () => {
             this._waitForDisconnect(session.id, session.testRun);
           });
+          // Ping periodically to prevent socket from being closed with error status 1006 in Browserstack
+          setInterval(() => webSocket.send(JSON.stringify({ type: 'ping' })), 10000);
         }
         return;
       }
